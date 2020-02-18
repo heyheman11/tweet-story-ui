@@ -1,23 +1,9 @@
+/* eslint-disable react/prop-types */
 import React, { useState } from "react";
-import { css } from "@emotion/core";
+import { css, keyframes } from "@emotion/core";
 import { SearchIcon } from "./icons/SearchIcon";
 import { flexBoxCenterColumn } from "./styles";
 
-// eslint-disable-next-line react/prop-types
-const InputChild = ({ type, id, name, value, handleInput, handleKeyDown }) => {
-  return (
-    <input
-      type={type}
-      id={id}
-      name={name}
-      onChange={handleInput}
-      value={value}
-      onKeyDown={handleKeyDown}
-    />
-  );
-};
-
-// eslint-disable-next-line react/prop-types
 const SearchBar = ({ searchValue, handleInput, handleEnter, styleContext }) => {
   const styleSearchBar = css`
     ${styleContext};
@@ -37,19 +23,18 @@ const SearchBar = ({ searchValue, handleInput, handleEnter, styleContext }) => {
   return (
     <div className="inner" css={styleSearchBar}>
       <SearchIcon />
-      <InputChild
+      <input
         type="text"
         id="search-bar"
         name="search-bar"
+        onChange={handleInput}
         value={searchValue}
-        handleInput={handleInput}
-        handleKeyDown={handleEnter}
+        onKeyDown={handleEnter}
       />
     </div>
   );
 };
 
-// eslint-disable-next-line react/prop-types
 const TweetSelector = ({ twitterValues, buttonClickHandler }) => {
   const styleTweets = css`
     ${flexBoxCenterColumn};
@@ -58,38 +43,86 @@ const TweetSelector = ({ twitterValues, buttonClickHandler }) => {
   `;
 
   const styleButton = css`
-    margin: 10px 0 0 0;
     background: transparent;
-    border: 1px solid grey;
+    border: none;
     text-align: center;
     padding: 10px;
     &:hover {
+      background-color: #c3d3e0;
       cursor: pointer;
     }
   `;
 
   const getTweets = () => {
-    // eslint-disable-next-line react/prop-types
     if (twitterValues.length > 0) {
-      // eslint-disable-next-line react/prop-types
       return twitterValues.map((content, index) => (
-        <button
+        <div
           key={index}
-          className="tweet-row"
           css={styleButton}
           onClick={() => buttonClickHandler(content)}
         >
           {content}
-        </button>
+        </div>
       ));
     } else {
       return null;
     }
   };
 
+  return <div css={styleTweets}>{getTweets()}</div>;
+};
+
+const StoryTime = ({ content }) => {
+  const wordArray = content.split(" ");
+
+  const getAnimation = () => {
+    const style = keyframes`
+      0% {
+        transform: translateX(-${Math.floor(
+          Math.random() * Math.floor(400)
+        )}px);
+      }
+      40%, 100% {
+        transform: translateX(${Math.floor(Math.random() * Math.floor(400))}px);
+      }
+    `;
+    return style;
+  };
+
+  const getWords = () => {
+    return wordArray.map((item, index) => {
+      return (
+        <div
+          key={index}
+          css={css`
+            animation: ${getAnimation()} 2s ease infinite;
+          `}
+        >
+          {item}
+        </div>
+      );
+    });
+  };
+
+  return getWords();
+};
+
+const Container = ({ children, width }) => {
+  const styleContainerFlex = css`
+    ${flexBoxCenterColumn};
+    margin: 50px 0 0 0;
+  `;
+
+  const styleContainerWidth = css`
+    max-width: ${width};
+    margin: 0 15px;
+  `;
+
   return (
-    <div className="container-tweets" css={styleTweets}>
-      {getTweets()}
+    <div className="container" css={styleContainerFlex}>
+      <div className="width" css={styleContainerWidth}>
+        {children}
+      </div>
     </div>
   );
 };
@@ -99,6 +132,7 @@ const ControlPanelParent = () => {
   const [twitterValues, setTwitterValues] = useState([]);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [tweet, setTweet] = useState("");
 
   const styleError = css`
     background-color: red;
@@ -119,6 +153,9 @@ const ControlPanelParent = () => {
           const values = await response.json();
           setIsError(false);
           setTwitterValues(values.text);
+          if (tweet.length > 0) {
+            setTweet([]);
+          }
         } else {
           setIsError(true);
           setErrorMessage(`Cannot find user with name: ${searchValue}`);
@@ -142,9 +179,9 @@ const ControlPanelParent = () => {
     ) : null;
   };
 
-  // eslint-disable-next-line no-unused-vars
   const buttonHandler = content => {
-    console.log(content);
+    setTwitterValues([]);
+    setTweet(content);
   };
 
   return (
@@ -160,28 +197,9 @@ const ControlPanelParent = () => {
         buttonClickHandler={buttonHandler}
       />
       {getErrorMessage()}
+      {tweet && tweet.length ? <StoryTime content={tweet} /> : null}
     </Container>
   );
 };
 
 export { ControlPanelParent };
-
-// eslint-disable-next-line react/prop-types
-const Container = ({ children, width }) => {
-  const styleContainerFlex = css`
-    ${flexBoxCenterColumn};
-    margin: 50px 0 0 0;
-  `;
-
-  const styleContainerWidth = css`
-    width: ${width};
-  `;
-
-  return (
-    <div className="container" css={styleContainerFlex}>
-      <div className="width" css={styleContainerWidth}>
-        {children}
-      </div>
-    </div>
-  );
-};
