@@ -1,11 +1,15 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 
 
-const SearchIcon = () => {
-  return <FontAwesomeIcon icon={faSearch} css={{ position: "absolute"}}/>;
+const SearchIcon = (props) => {
+  return <FontAwesomeIcon icon={faSearch} {...props} />;
+}
+
+const ExitIcon = (props) => {
+  return <FontAwesomeIcon icon={faTimes} {...props} />; 
 }
 
 
-export { SearchIcon };
+export { ExitIcon, SearchIcon };

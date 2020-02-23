@@ -1,6 +1,6 @@
 import React from "react";
 import { Global, css } from "@emotion/core";
-import { ControlPanelParent } from './ControlPanel';
+import { ControlPanel } from './ControlPanel/ControlPanel';
 
 const App = () => {
   const globalStyle = css`
@@ -12,7 +12,7 @@ const App = () => {
   return (
     <>
       <Global styles={globalStyle} />
-      <ControlPanelParent />
+      <ControlPanel />
     </>
   );
 };
