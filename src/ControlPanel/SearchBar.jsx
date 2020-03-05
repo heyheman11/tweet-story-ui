@@ -14,20 +14,26 @@ const SearchBar = ({
   const styleWithFlex = css`
     ${styleContext};
     ${flexBoxCenter};
+    position: relative;
+    z-index: 5;
     border: 1px solid grey;
     border-radius: 50px;
     padding: 10px;
     box-shadow: 0px 0px 7px 1px rgba(0, 0, 0, 0.42);
+    background: white;
     input {
+      font-family: inherit;
+      font-size: 1.3em;
       border: none;
       width: calc(100% - 20px);
       margin: 0 10px;
-      padding: 5px 0;
+      z-index: inherit;
     }
     button {
       border: none;
       padding: 0;
       background: none;
+      z-index: inherit;
     }
   `;
 
@@ -38,6 +44,7 @@ const SearchBar = ({
         type="text"
         id="search-bar"
         name="search-bar"
+        placeholder="twitter handle"
         onChange={handleInput}
         value={searchValue}
         onKeyDown={handleEnter}

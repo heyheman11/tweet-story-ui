@@ -1,11 +1,13 @@
 import React from "react";
 import { Global, css } from "@emotion/core";
-import { ControlPanel } from './ControlPanel/ControlPanel';
+import { ControlPanel } from "./ControlPanel/ControlPanel";
 
 const App = () => {
   const globalStyle = css`
     body {
-      margin: 0
+      @import url("https://fonts.googleapis.com/css?family=Muli&display=swap");
+      font-family: "Muli";
+      margin: 0;
     }
   `;
 

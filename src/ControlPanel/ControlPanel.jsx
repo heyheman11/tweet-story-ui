@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { css } from '@emotion/core';
 import { Container } from '../Components/Container';
 import { TweetPicker } from './TweetPicker';
-import { StoryTime } from './StoryTime';
+import { StoryTimeMemo as StoryTime } from './StoryTime';
 import { SearchBar } from './SearchBar';
 
 
@@ -30,11 +30,12 @@ const ControlPanel = () => {
         );
         if (response.ok) {
           const values = await response.json();
+          if (selectedTweet.length > 0) {
+            setSelectedTweet("");
+          }
           setIsError(false);
           setTwitterValues(values.text);
-          if (selectedTweet.length > 0) {
-            setSelectedTweet([]);
-          }
+
         } else {
           setIsError(true);
           setErrorMessage(`Cannot find user with name: ${searchValue}`);
@@ -60,7 +61,7 @@ const ControlPanel = () => {
     ) : null;
   };
 
-  const buttonHandler = content => {
+  const tweetSelectorHandler = content => {
     setTwitterValues([]);
     setSelectedTweet(content);
   };
@@ -88,12 +89,10 @@ const ControlPanel = () => {
       />
       <TweetPicker
         twitterValues={twitterValues}
-        buttonClickHandler={buttonHandler}
+        buttonClickHandler={tweetSelectorHandler}
       />
       {getErrorMessage()}
-      {selectedTweet && selectedTweet.length ? (
-        <StoryTime content={selectedTweet} />
-      ) : null}
+      <StoryTime content={selectedTweet} />
     </Container>
   );
 };
